@@ -10,3 +10,49 @@ endif::[]
 :toclevels: 5
 
 Embeddable Lua Scheduler is a pure Lua library to manage timers.
+
+Timers are bound to a point in time and are triggered when `current_time >= timer_time`.
+
+CAUTION: Repeated timers are implemented as regular timers re-added if needed before being triggered. Thus, a timer can only be triggered once per tick; triggers may be shifted or discarded based on the tick period.
+
+NOTE: Time going backwards will not change/advance the scheduler time.
+
+NOTE: _(performance)_ A binary heap is used to manage timer priorities.
+
+== API
+
+=== Scheduler
+
+[source,lua]
+----
+self.time -- current time
+self.timers -- binary heap of bound timers (as array/list)
+-- #self.timers => number of waiting timers
+
+-- scheduler constructor (the module itself)
+-- time: (optional) init time (numeric type, default: 0)
+Scheduler(time)
+
+-- create a timer
+-- delay: can be <= 0 for instantaneous timers (numeric type)
+-- count: (optional) number of iterations (default: 1, infinite: -1)
+-- callback(timer): called when the timer is triggered
+-- return timer
+Scheduler:timer(delay, count, callback)
+
+-- do a scheduler tick
+-- time: current time (numeric type)
+Scheduler:tick(time)
+----
+
+=== Timer
+
+[source,lua]
+----
+self.scheduler -- timer's scheduler
+self.wake -- timer's wake-up time (can be useful to compute delta)
+
+-- remove the timer
+-- (safe to call multiple times)
+Timer:remove()
+----
