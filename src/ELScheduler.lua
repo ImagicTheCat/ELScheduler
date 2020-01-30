@@ -25,6 +25,8 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 ]]
 
+local setmetatable, table_insert, math_floor, table_remove, ipairs = setmetatable, table.insert, math.floor, table.remove, ipairs
+
 --=[ Scheduler ]=--
 
 local Scheduler = {}
@@ -41,17 +43,17 @@ local function scheduler_add(self, timer)
   --- binary heap insert
   local timers = self.timers
 
-  table.insert(timers, timer)
+  table_insert(timers, timer)
   timer.index = #timers
 
-  local current, parent = timer.index, math.floor(timer.index/2)
+  local current, parent = timer.index, math_floor(timer.index/2)
   while parent > 0 and timers[parent].wake > timers[current].wake do -- heapify
     -- swap
     timers[parent], timers[current] = timers[current], timers[parent]
     -- update indexes
     timers[parent].index, timers[current].index = parent, current
     -- next: parent
-    current, parent = parent, math.floor(parent/2)
+    current, parent = parent, math_floor(parent/2)
   end
 end
 
@@ -74,9 +76,9 @@ local function scheduler_heap_delete(self, index)
 
   timers[index].index = nil
   if index == #timers then -- remove last node
-    table.remove(timers)
+    table_remove(timers)
   else -- remove by replacing the node
-    timers[index] = table.remove(timers) -- replace
+    timers[index] = table_remove(timers) -- replace
     timers[index].index = index
 
     local child, cindex = get_smallest_child(self, index)
@@ -97,6 +99,7 @@ end
 ----=[ Timer ]=--
 
 local Timer = {}
+local Timer_meta = { __index = Timer }
 
 -- remove the timer
 -- (safe to call multiple times)
@@ -117,7 +120,7 @@ function Scheduler:timer(delay, count, callback)
     count = callback and count or 1,
     callback = callback or count,
     scheduler = self
-  }, { __index = Timer })
+  }, Timer_meta)
 
   if timer.count ~= 0 then
     scheduler_add(self, timer)
@@ -143,7 +146,7 @@ function Scheduler:tick(time)
   local timer = timers[1] -- root
   while timer and time >= timer.wake do
     -- mark/remove timer
-    table.insert(triggers, timer)
+    table_insert(triggers, timer)
     scheduler_heap_delete(self, 1)
     timer = timers[1] -- next root
   end
@@ -157,6 +160,8 @@ function Scheduler:tick(time)
   end
 end
 
+local Scheduler_meta = { __index = Scheduler }
+
 return setmetatable({}, {
   __call = function(t, time)
     -- create scheduler
@@ -164,6 +169,6 @@ return setmetatable({}, {
     return setmetatable({
       timers = {}, -- binary heap (as array)
       time = time or 0
-    }, { __index = Scheduler })
+    }, Scheduler_meta)
   end
 })
