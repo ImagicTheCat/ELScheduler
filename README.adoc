@@ -50,7 +50,9 @@ Scheduler:tick(time)
 [source,lua]
 ----
 self.scheduler -- timer's scheduler
-self.wake -- timer's wake-up time (can be useful to compute delta)
+self.wake -- wake-up time (useful to compute delta)
+self.delay -- delay/interval (start_time = wake - delay)
+self.count -- remaining iterations (excluding current scheduled iteration)
 
 -- remove the timer
 -- (safe to call multiple times)
