@@ -19,6 +19,10 @@ NOTE: Time going backwards will not change/advance the scheduler time.
 
 NOTE: _(performance)_ A binary heap is used to manage timer priorities.
 
+== Install
+
+See link:src[], link:rockspecs[] or https://luarocks.org/modules/imagicthecat-0a6b669a3a/elscheduler[luarocks].
+
 == API
 
 === Scheduler
