@@ -1,8 +1,7 @@
 package = "ELScheduler"
-version = "1.0-1"
+version = "scm-2"
 source = {
   url = "git://github.com/ImagicTheCat/ELScheduler",
-  tag = "1.0"
 }
 
 description = {
@@ -20,6 +19,6 @@ dependencies = {
 build = {
   type = "builtin",
   modules = {
-    Luaseq = "src/ELScheduler.lua"
+    ELScheduler = "src/ELScheduler.lua"
   }
 }

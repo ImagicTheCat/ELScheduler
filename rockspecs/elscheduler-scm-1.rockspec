@@ -19,6 +19,6 @@ dependencies = {
 build = {
   type = "builtin",
   modules = {
-    ELScheduler = "src/ELScheduler.lua"
+    Luaseq = "src/ELScheduler.lua"
   }
 }
