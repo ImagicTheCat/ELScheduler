@@ -1,7 +1,7 @@
 -- create n interval timers with a growing delay and do n ticks
 -- params: [n]
 
-package.path = ";src/?.lua;"..package.path
+package.path = "src/?.lua"
 local Scheduler = require("ELScheduler")
 
 local n = ...
